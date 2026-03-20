@@ -1,0 +1,754 @@
+{
+  "name": "Scraping",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -368,
+        -272
+      ],
+      "id": "6161b5cd-bc8f-4338-8d7e-a839268c8022",
+      "name": "Obtener Sitios a Investigar"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -368,
+        -64
+      ],
+      "id": "ee9ba127-9eeb-4d8c-af95-f7c0d2c5491d",
+      "name": "Inicio Manual de Proceso",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1c6bqzJIMbnduRoBTmevD_8pLZ5wiNb5Jlk0hxgrvV1A",
+          "mode": "list",
+          "cachedResultName": "Course Scraping",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1c6bqzJIMbnduRoBTmevD_8pLZ5wiNb5Jlk0hxgrvV1A/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sitios Web a Buscar",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1c6bqzJIMbnduRoBTmevD_8pLZ5wiNb5Jlk0hxgrvV1A/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -160,
+        -176
+      ],
+      "id": "0d2dbf2d-babb-45b9-81f9-319d2e360aa8",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "m825oOaoDRIBkie9",
+          "name": "Google Sheets - diviercasas26@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4a49e1bd-3338-4612-8161-c68ebba3eb5b",
+              "leftValue": "={{ $json['Sitio Web'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "e21b90f5-d121-43a9-b167-d409baefae69",
+              "leftValue": "={{ $json['Sitio Web'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        48,
+        -176
+      ],
+      "id": "3314518e-86ef-4fed-8378-1ad0e17583d3",
+      "name": "Filtrar Stios Web Con Enlace"
+    },
+    {
+      "parameters": {
+        "content": "## Inicio de Proceso\nTomar Sitios Web para buscar informacion en ellos.",
+        "height": 96,
+        "width": 640,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -400,
+        -416
+      ],
+      "typeVersion": 1,
+      "id": "d9ac3a2a-c024-414c-ab4c-e4a69dfb5aa9",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json['Sitio Web'] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        272,
+        -176
+      ],
+      "id": "f0d9ec51-b2e8-4bf0-8382-1b32ba86611e",
+      "name": "Obtener HTML del Sitio Web"
+    },
+    {
+      "parameters": {
+        "html": "={{ $json.data }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [
+        528,
+        -176
+      ],
+      "id": "ae83a1a5-03da-48f3-a2b0-0b5b12f6991f",
+      "name": "Transformar a Markdown"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "role": "system",
+              "content": "=# Información\nEres un asistente para extraer datos de un sitio web, se te dará la información en formato Markdown, y necesito que retornes la información en el formato deseado.\n\nNo retornes nada más de lo que te necesito.\n\nSi el URL no está completo, completarlo usando el URL que también te proveeran del sitio del cual se extrae la información.\n\n## Objetivo\nInformación que necesitas extraer y encontrar: \n\n- Nombre del instructor (instructorName)\n- url del curso de Udemy (udemyUrl) (si lo tiene, si no null)\n- url del curso de DevTalles (devtallesUrl) \n- Nombre del curso (courseName)\n- Descripción del curso (description)\n- Categoría del curso (category)\n- Otra información relevante (additionalInformation)\n\n## Ejemplo de salida\nNecesito un json con la siguiente estructura:\n[\n{\n  courseName: 'XXX',\n  instructor: 'XXX',\n  devtallesUrl: 'https://xxx',\n  udemyUrl: 'https://xxx',\n  description: 'xxx',\n  category: 'xxx',\n  additionalInformation: 'xxxx' \n},\n{\n  courseName: 'XXX',\n  instructor: 'XXX',\n  devtallesUrl: 'https://xxx',\n  udemyUrl: 'https://xxx',\n  description: 'xxx',\n  category: 'xxx',\n  additionalInformation: 'xxxx' \n}\n]"
+            },
+            {
+              "content": "=# URL del sitio\n{{ $('Filtrar Stios Web Con Enlace').item.json['Sitio Web'] }}\n\n\n# Data a extrar\n{{ $json.data }}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        752,
+        -176
+      ],
+      "id": "4d32d4be-e1b9-4de5-9d87-baaa3940bd01",
+      "name": "Enviar Informacion a OpenAI",
+      "alwaysOutputData": false,
+      "credentials": {
+        "openAiApi": {
+          "id": "58m3uJYxbZY0jLDO",
+          "name": "OpenAi account diviercasas26"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n    {\n        \"courses\": [\n            {\n                \"courseName\": \"Nest: Desarrollo backend escalable con Node\",\n                \"instructor\": \"Fernando Herrera\",\n                \"devtallesUrl\": \"https://cursos.devtalles.com/courses/nest?coupon=MARZO-2026\",\n                \"udemyUrl\": \"https://www.udemy.com/course/nest-framework/?couponCode=MARZO-2026\",\n                \"description\": \"Nest es un framework de node extensible, versátil y progresivo, el cual nos ofrece la columna vertebral de todo tipo de aplicaciones del lado del servidor.\",\n                \"category\": \"Backend\",\n                \"additionalInformation\": \"Cupón activo MARZO-2026\"\n            },\n            {\n                \"courseName\": \"Nuxt: El marco de trabajo web progresivo (Nuxt 4+)\",\n                \"instructor\": \"Fernando Herrera\",\n                \"devtallesUrl\": \"https://cursos.devtalles.com/courses/nuxt?coupon=MARZO-2026\",\n                \"udemyUrl\": \"https://www.udemy.com/course/nuxt-web-progresivo/?couponCode=MARZO-2026\",\n                \"description\": \"Aprende Nuxt.js, el framework basado en Vue.js para crear aplicaciones web rápidas, modernas y optimizadas para SEO, desde los fundamentos hasta el despliegue con SSR, SSG y API Routes.\",\n                \"category\": \"Desarrollo Web\",\n                \"additionalInformation\": \"Cupón activo MARZO-2026\"\n            },\n            {\n                \"courseName\": \"Principios: SOLID y Clean Code\",\n                \"instructor\": \"Fernando Herrera\",\n                \"devtallesUrl\": \"https://cursos.devtalles.com/courses/solid-clean-code?coupon=MARZO-2026\",\n                \"udemyUrl\": \"https://www.udemy.com/course/solid-clean/?couponCode=MARZO-2026\",\n                \"description\": \"Si hablamos de diseño y desarrollo de aplicaciones, los principios S.O.L.I.D. son unos fundamentos clave de la arquitectura y desarrollo de software.\",\n                \"category\": \"Infraestructura\",\n                \"additionalInformation\": \"Cupón activo MARZO-2026\"\n            },\n            {\n                \"courseName\": \"Docker: Guía práctica de uso para desarrolladores\",\n                \"instructor\": \"Fernando Herrera\",\n                \"devtallesUrl\": \"https://cursos.devtalles.com/courses/docker-guia-practica?coupon=MARZO-2026\",\n                \"udemyUrl\": \"https://www.udemy.com/course/docker-guia-practica/?couponCode=MARZO-2026\",\n                \"description\": \"Aquí aprenderás Docker y para qué te puede servir, aprende a utilizar y crear imágenes, controlar el versionamiento y construcción automática de las mismas.\",\n                \"category\": \"Infraestructura\",\n                \"additionalInformation\": \"Cupón activo MARZO-2026\"\n            },\n            {\n                \"courseName\": \"Patrones de Diseño: Soluciones prácticas y eficientes\",\n                \"instructor\": \"Fernando Herrera\",\n                \"devtallesUrl\": \"https://cursos.devtalles.com/courses/patrones-diseno?coupon=MARZO-2026\",\n                \"udemyUrl\": \"https://www.udemy.com/course/patrones-diseno/?couponCode=MARZO-2026\",\n                \"description\": \"24 Patrones de Diseño para resolver problemas comunes al programar, además de escribir código más limpio y escalable.\",\n                \"category\": \"Desarrollo Web\",\n                \"additionalInformation\": \"Cupón activo MARZO-2026\"\n            },\n            {\n                \"courseName\": \"Java: Spring Boot - Guía definitiva\",\n                \"instructor\": \"Gabriel Chaldú\",\n                \"devtallesUrl\": \"https://cursos.devtalles.com/courses/spring-boot?coupon=MARZO-2026\",\n                \"udemyUrl\": \"https://www.udemy.com/course/java-spring-boot-guia-definitiva/?couponCode=MARZO-2026\",\n                \"description\": \"Aprende Spring Boot desde cero con Gabriel Chaldú: inicia con Spring MVC y Thymeleaf creando un sitio web dinámico y luego desarrolla un API REST con seguridad, JPA y buenas prácticas.\",\n                \"category\": \"Backend\",\n                \"additionalInformation\": \"Cupón activo MARZO-2026\"\n            },\n            {\n                \"courseName\": \"Nest: Desarrollo backend escalable con Node\",\n                \"instructor\": \"Fernando Herrera\",\n                \"devtallesUrl\": \"https://cursos.devtalles.com/courses/nest?coupon=MARZO-2026\",\n                \"udemyUrl\": \"https://www.udemy.com/course/nest-framework/?couponCode=MARZO-2026\",\n                \"description\": \"Nest es un framework de node extensible, versátil y progresivo, el cual nos ofrece la columna vertebral de todo tipo de aplicaciones del lado del servidor.\",\n                \"category\": \"Backend\",\n                \"additionalInformation\": \"Cupón activo MARZO-2026\"\n            },\n            {\n                \"courseName\": \"Nuxt: El marco de trabajo web progresivo (Nuxt 4+)\",\n                \"instructor\": \"Fernando Herrera\",\n                \"devtallesUrl\": \"https://cursos.devtalles.com/courses/nuxt?coupon=MARZO-2026\",\n                \"udemyUrl\": \"https://www.udemy.com/course/nuxt-web-progresivo/?couponCode=MARZO-2026\",\n                \"description\": \"Aprende Nuxt.js, el framework basado en Vue.js para crear aplicaciones web rápidas, modernas y optimizadas para SEO, desde los fundamentos hasta el despliegue con SSR, SSG y API Routes.\",\n                \"category\": \"Desarrollo Web\",\n                \"additionalInformation\": \"Cupón activo MARZO-2026\"\n            },\n            {\n                \"courseName\": \"Principios: SOLID y Clean Code\",\n                \"instructor\": \"Fernando Herrera\",\n                \"devtallesUrl\": \"https://cursos.devtalles.com/courses/solid-clean-code?coupon=MARZO-2026\",\n                \"udemyUrl\": \"https://www.udemy.com/course/solid-clean/?couponCode=MARZO-2026\",\n                \"description\": \"Si hablamos de diseño y desarrollo de aplicaciones, los principios S.O.L.I.D. son unos fundamentos clave de la arquitectura y desarrollo de software.\",\n                \"category\": \"Infraestructura\",\n                \"additionalInformation\": \"Cupón activo MARZO-2026\"\n            },\n            {\n                \"courseName\": \"Docker: Guía práctica de uso para desarrolladores\",\n                \"instructor\": \"Fernando Herrera\",\n                \"devtallesUrl\": \"https://cursos.devtalles.com/courses/docker-guia-practica?coupon=MARZO-2026\",\n                \"udemyUrl\": \"https://www.udemy.com/course/docker-guia-practica/?couponCode=MARZO-2026\",\n                \"description\": \"Aquí aprenderás Docker y para qué te puede servir, aprende a utilizar y crear imágenes, controlar el versionamiento y construcción automática de las mismas.\",\n                \"category\": \"Infraestructura\",\n                \"additionalInformation\": \"Cupón activo MARZO-2026\"\n            },\n            {\n                \"courseName\": \"Patrones de Diseño: Soluciones prácticas y eficientes\",\n                \"instructor\": \"Fernando Herrera\",\n                \"devtallesUrl\": \"https://cursos.devtalles.com/courses/patrones-diseno?coupon=MARZO-2026\",\n                \"udemyUrl\": \"https://www.udemy.com/course/patrones-diseno/?couponCode=MARZO-2026\",\n                \"description\": \"24 Patrones de Diseño para resolver problemas comunes al programar, además de escribir código más limpio y escalable.\",\n                \"category\": \"Desarrollo Web\",\n                \"additionalInformation\": \"Cupón activo MARZO-2026\"\n            },\n            {\n                \"courseName\": \"Java: Spring Boot - Guía definitiva\",\n                \"instructor\": \"Gabriel Chaldú\",\n                \"devtallesUrl\": \"https://cursos.devtalles.com/courses/spring-boot?coupon=MARZO-2026\",\n                \"udemyUrl\": \"https://www.udemy.com/course/java-spring-boot-guia-definitiva/?couponCode=MARZO-2026\",\n                \"description\": \"Aprende Spring Boot desde cero con Gabriel Chaldú: inicia con Spring MVC y Thymeleaf creando un sitio web dinámico y luego desarrolla un API REST con seguridad, JPA y buenas prácticas.\",\n                \"category\": \"Backend\",\n                \"additionalInformation\": \"Cupón activo MARZO-2026\"\n            },\n            {\n                \"courseName\": \"PHP moderno: Empieza tu camino en el lenguaje\",\n                \"instructor\": \"Teddy Paz\",\n                \"devtallesUrl\": \"https://cursos.devtalles.com/courses/PHP-moderno?coupon=PHP-26\",\n                \"udemyUrl\": null,\n                \"description\": \"Aprende PHP moderno desde cero y con buenas prácticas. Domina fundamentos, control de flujo, funciones, POO, Composer, APIs y base de datos, hasta desplegar tu primer backend real y listo para producción.\",\n                \"category\": \"Backend\",\n                \"additionalInformation\": \"Cupón activo PHP-26\"\n            },\n            {\n                \"courseName\": \"Python + n8n: Automatiza rutinas cotidianas\",\n                \"instructor\": \"Ricardo Cuéllar\",\n                \"devtallesUrl\": \"https://cursos.devtalles.com/courses/python-n8n-automatiza-rutinas\",\n                \"udemyUrl\": null,\n                \"description\": \"Aprende a utilizar Python para tus proyectos de automatización cotidiana o personales. Incluye conceptos de n8n, FastAPI, manipulación de datos y scraping.\",\n                \"category\": \"Desarrollo Web\",\n                \"additionalInformation\": \"Curso práctico\"\n            },\n            {\n                \"courseName\": \".NET Fullstack: Arquitectura limpia al frontend y Blazor\",\n                \"instructor\": \"Teddy Paz\",\n                \"devtallesUrl\": \"https://cursos.devtalles.com/courses/netfullstack?coupon=MARZO-2026\",\n                \"udemyUrl\": \"https://www.udemy.com/course/net-fullstack/?couponCode=MARZO-2026\",\n                \"description\": \"Aprende desarrollo web Fullstack con C# y .NET Core. Domina Clean Architecture, Blazor, CQRS, EF Core, ASP.NET Core Identity y más en un proyecto real.\",\n                \"category\": \"Backend\",\n                \"additionalInformation\": \"Cupón activo MARZO-2026\"\n            },\n            {\n                \"courseName\": \"Python: Fundamentos hasta los detalles\",\n                \"instructor\": \"Ricardo Cuéllar\",\n                \"devtallesUrl\": \"https://cursos.devtalles.com/courses/python?coupon=MARZO-2026\",\n                \"udemyUrl\": \"https://www.udemy.com/course/devtalles-python/?couponCode=MARZO-2026\",\n                \"description\": \"Aprende las bases de Python: variables, estructuras de control, ciclos, funciones, POO, errores, módulos y entornos virtuales. Ideal para principiantes.\",\n                \"category\": \"Backend\",\n                \"additionalInformation\": \"Cupón activo MARZO-2026\"\n            }\n        ]\n    }\n]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1088,
+        -176
+      ],
+      "id": "00cceb80-c692-4f48-b7f0-062d57b1eecc",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "content": "## Simular funcionamiento de la IA \nSe coloca el nodo Code para simular la data generada por el nodo de IA",
+        "height": 400,
+        "width": 624
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        688,
+        -336
+      ],
+      "typeVersion": 1,
+      "id": "ece5cc66-ab54-4a84-82bc-d7451ffa82be",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "courses",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1376,
+        -176
+      ],
+      "id": "5b8b42f1-75b1-4889-bb24-1ae848817ee5",
+      "name": "Extraer Cursos"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1616,
+        -176
+      ],
+      "id": "70c38498-c8b4-4f82-a58f-c4ab1ace6117",
+      "name": "Barrer Cada Curso"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "Fin de Ciclo",
+      "typeVersion": 1,
+      "position": [
+        2944,
+        -160
+      ],
+      "id": "84302e69-8e73-4216-9759-084a4082fcda"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1c6bqzJIMbnduRoBTmevD_8pLZ5wiNb5Jlk0hxgrvV1A",
+          "mode": "list",
+          "cachedResultName": "Course Scraping",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1c6bqzJIMbnduRoBTmevD_8pLZ5wiNb5Jlk0hxgrvV1A/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1765549009,
+          "mode": "list",
+          "cachedResultName": "Resultados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1c6bqzJIMbnduRoBTmevD_8pLZ5wiNb5Jlk0hxgrvV1A/edit#gid=1765549009"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nombre del Curso": "={{ $json.courseName }}",
+            "Instructor": "={{ $json.instructor }}",
+            "DevTalles": "={{ $json.devtallesUrl }}",
+            "Udemy": "={{ $json.udemyUrl }}",
+            "Descripcion": "={{ $json.description }}"
+          },
+          "matchingColumns": [
+            "Nombre del Curso"
+          ],
+          "schema": [
+            {
+              "id": "Nombre del Curso",
+              "displayName": "Nombre del Curso",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Instructor",
+              "displayName": "Instructor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DevTalles",
+              "displayName": "DevTalles",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Udemy",
+              "displayName": "Udemy",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Descripcion",
+              "displayName": "Descripcion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Google Docs - Temario",
+              "displayName": "Google Docs - Temario",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1840,
+        -160
+      ],
+      "id": "e4bc9d06-e86b-4644-a882-ca662b679036",
+      "name": "Actualizar informacion general del curso",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "m825oOaoDRIBkie9",
+          "name": "Google Sheets - diviercasas26@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "scrape",
+        "url": "={{ $json.Udemy }}",
+        "requestOptions": {}
+      },
+      "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
+      "typeVersion": 1,
+      "position": [
+        2080,
+        -160
+      ],
+      "id": "4f242338-5ae4-4883-b527-a272a4735da0",
+      "name": "Extraer Informacion de Udemy",
+      "credentials": {
+        "firecrawlApi": {
+          "id": "2S4kHqqeperZC3jb",
+          "name": "Firecrawl account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "folderId": "1D7kUudQJjxsV6AwiY9e4H_-HgRQm16gz",
+        "title": "={{ $json.data.metadata['og:title'].replaceAll(':','') }}"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        2304,
+        -160
+      ],
+      "id": "602aa620-b34b-4239-8d7b-c11140c3661f",
+      "name": "Crear Documento del Curso",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "uehR9OCUgE8Tu9zr",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $('Crear Documento del Curso').item.json.id }}",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $('Extraer Informacion de Udemy').item.json.data.markdown }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        2736,
+        -160
+      ],
+      "id": "fac66215-bbcf-4e3a-8820-a2713951043a",
+      "name": "Actualizar temario en documento",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "uehR9OCUgE8Tu9zr",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1c6bqzJIMbnduRoBTmevD_8pLZ5wiNb5Jlk0hxgrvV1A",
+          "mode": "list",
+          "cachedResultName": "Course Scraping",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1c6bqzJIMbnduRoBTmevD_8pLZ5wiNb5Jlk0hxgrvV1A/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1765549009,
+          "mode": "list",
+          "cachedResultName": "Resultados",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1c6bqzJIMbnduRoBTmevD_8pLZ5wiNb5Jlk0hxgrvV1A/edit#gid=1765549009"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Google Docs - Temario": "=https://docs.google.com/document/d/{{ $('Crear Documento del Curso').item.json.id }}",
+            "Nombre del Curso": "={{ $('Actualizar informacion general del curso').item.json['Nombre del Curso'] }}"
+          },
+          "matchingColumns": [
+            "Nombre del Curso"
+          ],
+          "schema": [
+            {
+              "id": "Nombre del Curso",
+              "displayName": "Nombre del Curso",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Instructor",
+              "displayName": "Instructor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DevTalles",
+              "displayName": "DevTalles",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Udemy",
+              "displayName": "Udemy",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Descripcion",
+              "displayName": "Descripcion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Google Docs - Temario",
+              "displayName": "Google Docs - Temario",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2512,
+        -160
+      ],
+      "id": "e63a3b75-133b-4fe3-9394-7c7764ac144b",
+      "name": "Actualizar URL del Temario",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "m825oOaoDRIBkie9",
+          "name": "Google Sheets - diviercasas26@gmail.com"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Obtener Sitios a Investigar": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Inicio Manual de Proceso": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Filtrar Stios Web Con Enlace",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar Stios Web Con Enlace": {
+      "main": [
+        [
+          {
+            "node": "Obtener HTML del Sitio Web",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener HTML del Sitio Web": {
+      "main": [
+        [
+          {
+            "node": "Transformar a Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transformar a Markdown": {
+      "main": [
+        [
+          {
+            "node": "Enviar Informacion a OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Informacion a OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Extraer Cursos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Barrer Cada Curso": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Actualizar informacion general del curso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fin de Ciclo": {
+      "main": [
+        [
+          {
+            "node": "Barrer Cada Curso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer Cursos": {
+      "main": [
+        [
+          {
+            "node": "Barrer Cada Curso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar informacion general del curso": {
+      "main": [
+        [
+          {
+            "node": "Extraer Informacion de Udemy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer Informacion de Udemy": {
+      "main": [
+        [
+          {
+            "node": "Crear Documento del Curso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Documento del Curso": {
+      "main": [
+        [
+          {
+            "node": "Actualizar URL del Temario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar temario en documento": {
+      "main": [
+        [
+          {
+            "node": "Fin de Ciclo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar URL del Temario": {
+      "main": [
+        [
+          {
+            "node": "Actualizar temario en documento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "c18d6266-73aa-4df4-b5b6-3e2197ddd6cd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "88dd7a0f4810eac54b96b4465bbcec8adbc38bf739d63b0195b306d5f0462838"
+  },
+  "id": "sIeF01yACysAAZHD",
+  "tags": []
+}

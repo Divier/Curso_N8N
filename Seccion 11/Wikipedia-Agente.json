@@ -1,0 +1,166 @@
+{
+  "name": "Wikipedia-Agente",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "mode": "webhook",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -592,
+        -80
+      ],
+      "id": "b456998e-799a-415c-a9f6-586090059391",
+      "name": "When chat message received",
+      "webhookId": "ceeb621d-106b-4caa-b26e-74d5f7db2eae"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "## Objetivo\nEres un asistente amable, tu nombre es Ana, ayudas a buscar informacion en Wikipedia.\n\n## Reglas\n- Regresa siempre respuestas de dos parrafos o menos.\n- Siempre pon las referencias de los articulos que consultas de Wikipedia.\n\n## Tools\n- Tienes una \"tool\" para conectarte a Wikipedia y traer informacion, puedes usarla para confirmar informacion."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -384,
+        -80
+      ],
+      "id": "89f03833-de69-4dd4-b8df-e837978b9e1b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -288,
+        192
+      ],
+      "id": "75109c9a-be85-4c87-aa55-53d5cbe0cec8",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        112
+      ],
+      "id": "60aec9e3-44eb-4d79-8971-aa015f653621",
+      "name": "Wikipedia",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "model": "gpt-oss:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -528,
+        128
+      ],
+      "id": "a2895252-aa9d-4f5b-92d7-bf1982551e9f",
+      "name": "Ollama Chat Model-Localhost",
+      "credentials": {
+        "ollamaApi": {
+          "id": "VO6wNFptEfmS4dVi",
+          "name": "Ollama account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -688,
+        144
+      ],
+      "id": "a3aceed7-ec89-4ca9-bf6b-30818288f8aa",
+      "name": "Google Gemini Chat Model-diviercasas26@gmail.com",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "23mSDWyqfN6mF7Y3",
+          "name": "Google Gemini Api account-diviercasas26@gmail.com"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wikipedia": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model-diviercasas26@gmail.com": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Ollama Chat Model-Localhost": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "0e04f15f-8a07-42e6-a401-2d516cb288e5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "88dd7a0f4810eac54b96b4465bbcec8adbc38bf739d63b0195b306d5f0462838"
+  },
+  "id": "3Um2vFVwiV4vLWt1",
+  "tags": []
+}
