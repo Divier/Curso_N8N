@@ -1,0 +1,521 @@
+{
+  "name": "Pokemon Scraper",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1552,
+        144
+      ],
+      "id": "33a6228a-62d8-4b69-adeb-0a8b7a26e115",
+      "name": "Click"
+    },
+    {
+      "parameters": {
+        "url": "=https://pokeapi.co/api/v2/pokemon/{{ $json.ID }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -656,
+        144
+      ],
+      "id": "6b7847e4-a0d7-402f-a1bb-81e495928a6f",
+      "name": "API Obtener Informacion Pokemon"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1RSk2FK32uf4NYjH3J-H0kqDCI-UHlGIa1UcaSJI-P3w",
+          "mode": "list",
+          "cachedResultName": "Pokemon tabla de informacion",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RSk2FK32uf4NYjH3J-H0kqDCI-UHlGIa1UcaSJI-P3w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Pokemons-ID-Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RSk2FK32uf4NYjH3J-H0kqDCI-UHlGIa1UcaSJI-P3w/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1168,
+        144
+      ],
+      "id": "f77334c3-7d02-422a-8ffc-744b78aa2d27",
+      "name": "Obtener IDs de Pokemons",
+      "alwaysOutputData": false,
+      "executeOnce": false,
+      "retryOnFail": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "m825oOaoDRIBkie9",
+          "name": "Google Sheets - diviercasas26@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5c74718f-f337-4684-a395-97ade1e0c96e",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "number"
+            },
+            {
+              "id": "fbcbf8dc-065e-4b56-8f0f-7b5858189ac7",
+              "name": "name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "4ee68268-75f3-4bf1-a9ae-b3ed9146914f",
+              "name": "type",
+              "value": "={{ $json.types[0].type.name }}",
+              "type": "string"
+            },
+            {
+              "id": "69eacc55-64db-4f71-ad90-fe958a24deb7",
+              "name": "photos.front",
+              "value": "={{ $json.sprites.front_default }}",
+              "type": "string"
+            },
+            {
+              "id": "e37bafbd-18e8-43f4-97d1-1d7a5ca87193",
+              "name": "photos.back",
+              "value": "={{ $json.sprites.back_default }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -448,
+        144
+      ],
+      "id": "bfb61bf1-797e-41af-ae57-43d88d905e26",
+      "name": "Extraer Datos del Pokemon"
+    },
+    {
+      "parameters": {
+        "content": "## Google Sheet\nObtener IDs de los pokemons",
+        "height": 288,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1248,
+        16
+      ],
+      "typeVersion": 1,
+      "id": "d28e7fe2-df97-446e-becc-62010921b88a",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f9213b66-af71-43b5-b224-606509acecfc",
+              "leftValue": "={{ $json.Nombre }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        -896,
+        144
+      ],
+      "id": "8211ee42-09bb-4886-90c8-36eaa3101ca8",
+      "name": "Filtrar Pokemones a buscar"
+    },
+    {
+      "parameters": {
+        "content": "## Google Sheet\nGuardar informacion en el documento",
+        "height": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -272,
+        48
+      ],
+      "typeVersion": 1,
+      "id": "cf1e0d69-89d1-4ddd-b63b-b9d10fae86d8",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Filtro\nUnicamente pasan los que no tienen nombre, ni tipo",
+        "height": 288,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -976,
+        16
+      ],
+      "typeVersion": 1,
+      "id": "cf6aa2e8-3c4f-4028-9c51-765ad7f76bad",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## HTTP\nTraer informacion de los pokemons",
+        "height": 288,
+        "width": 400
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -704,
+        16
+      ],
+      "typeVersion": 1,
+      "id": "c4b6d758-48d5-47b5-82dc-33f1c0fb0b8d",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "Nombre"
+            },
+            {
+              "fieldToAggregate": "ID"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        80,
+        144
+      ],
+      "id": "06df5904-48be-4ccf-9f4b-e8f7a3068c78",
+      "name": "Agrupar Resultados"
+    },
+    {
+      "parameters": {
+        "content": "## Agrupar\nDatos de salida",
+        "height": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "07b95a4f-6ba7-4bb7-ad49-61ab6ac4c9d0",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Enviar Correo\nCon el resumen del proceso",
+        "height": 256,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        272,
+        48
+      ],
+      "typeVersion": 1,
+      "id": "748016b8-e4ac-4c20-9c44-a98e87a90095",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "sendTo": "diviercasas26@gmail.com",
+        "subject": "El proceso de migracion termino",
+        "message": "=<h1>El proceso termino</h1>\n\n<h2>Nuevos pokemons ({{ $json.ID.length }}) </h2>\n{{ $json.ID }}\n<br/>\n{{ $json.Nombre }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        352,
+        144
+      ],
+      "id": "46e407db-387c-4ebc-bb53-cfa354242ae6",
+      "name": "Enviar correo de resultado del proceso",
+      "webhookId": "e6e927c1-f23a-46e8-a5fe-8ace28ceb23d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "5PpSOh6ABJDqQ0v4",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1RSk2FK32uf4NYjH3J-H0kqDCI-UHlGIa1UcaSJI-P3w",
+          "mode": "list",
+          "cachedResultName": "Pokemon tabla de informacion",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RSk2FK32uf4NYjH3J-H0kqDCI-UHlGIa1UcaSJI-P3w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Pokemons-ID-Sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RSk2FK32uf4NYjH3J-H0kqDCI-UHlGIa1UcaSJI-P3w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.id }}",
+            "Nombre": "={{ $json.name }}",
+            "Tipo": "={{ $json.type }}",
+            "Sprite Frontal": "={{ $json.photos.front }}",
+            "Sprite Posterior": "={{ $json.photos.back }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Tipo",
+              "displayName": "Tipo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Sprite Frontal",
+              "displayName": "Sprite Frontal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Sprite Posterior",
+              "displayName": "Sprite Posterior",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -192,
+        144
+      ],
+      "id": "aad6ecd0-abd7-4c25-a689-4100cf33b0ef",
+      "name": "Actualizar informacion de pokemons",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "m825oOaoDRIBkie9",
+          "name": "Google Sheets - diviercasas26@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            },
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1536,
+        -96
+      ],
+      "id": "67304408-bcf3-4a3b-a107-767d03d25cb6",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Click": {
+      "main": [
+        []
+      ]
+    },
+    "Obtener IDs de Pokemons": {
+      "main": [
+        [
+          {
+            "node": "Filtrar Pokemones a buscar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API Obtener Informacion Pokemon": {
+      "main": [
+        [
+          {
+            "node": "Extraer Datos del Pokemon",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer Datos del Pokemon": {
+      "main": [
+        [
+          {
+            "node": "Actualizar informacion de pokemons",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar Pokemones a buscar": {
+      "main": [
+        [
+          {
+            "node": "API Obtener Informacion Pokemon",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agrupar Resultados": {
+      "main": [
+        [
+          {
+            "node": "Enviar correo de resultado del proceso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar informacion de pokemons": {
+      "main": [
+        [
+          {
+            "node": "Agrupar Resultados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Obtener IDs de Pokemons",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "ecdff9d9-fba2-41cd-a15d-fe3136c971be",
+  "meta": {
+    "instanceId": "88dd7a0f4810eac54b96b4465bbcec8adbc38bf739d63b0195b306d5f0462838"
+  },
+  "id": "QELzZA37yJscqd8a",
+  "tags": [
+    {
+      "updatedAt": "2026-03-06T21:22:23.457Z",
+      "createdAt": "2026-03-06T21:22:23.457Z",
+      "id": "4el7vwC9IMFUWQ7K",
+      "name": "pokemons"
+    },
+    {
+      "updatedAt": "2026-03-06T21:22:35.428Z",
+      "createdAt": "2026-03-06T21:22:35.428Z",
+      "id": "OT4lz8CwT2lLxvhw",
+      "name": "primer work flow"
+    }
+  ]
+}

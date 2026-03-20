@@ -1,0 +1,734 @@
+{
+  "name": "Formularios-T-Shirt",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -672,
+        -304
+      ],
+      "id": "a21f3b93-3f56-4b06-a3d9-7d750f8b8db6",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1MTnjS99Iry6H8YgQhoXICBxW30weeqfCf0UHTlhfZLY",
+          "mode": "list",
+          "cachedResultName": "T-Shirt (respuestas)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MTnjS99Iry6H8YgQhoXICBxW30weeqfCf0UHTlhfZLY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 580784192,
+          "mode": "list",
+          "cachedResultName": "Respuestas de formulario 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MTnjS99Iry6H8YgQhoXICBxW30weeqfCf0UHTlhfZLY/edit#gid=580784192"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -272,
+        -80
+      ],
+      "id": "f3a21312-4e7f-4e86-b4d8-f80b572dcb19",
+      "name": "Obtener Solicitudes de Camisetas",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "m825oOaoDRIBkie9",
+          "name": "Google Sheets - diviercasas26@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c42d89eb-839b-4d76-8d5a-045495440c55",
+              "leftValue": "={{ $json['Dirección de correo electrónico'] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        -144,
+        -496
+      ],
+      "id": "7ff785cd-47eb-4690-a580-dc1e749faedc",
+      "name": "Filtrar registros sin correo electronico"
+    },
+    {
+      "parameters": {
+        "content": "## Google Sheet\nLeer y Filtrar Solicitudes",
+        "height": 304,
+        "width": 512,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -368,
+        -192
+      ],
+      "typeVersion": 1,
+      "id": "f3e4ede2-7c50-4e1a-93d2-809c1199ae0b",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1s_z9OKCv3O6oVLH4Y9RmTdF6m7WXUkIaKzJ85GlBZZo",
+          "mode": "list",
+          "cachedResultName": "T-Shirt Inventario",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1s_z9OKCv3O6oVLH4Y9RmTdF6m7WXUkIaKzJ85GlBZZo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "inventario",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1s_z9OKCv3O6oVLH4Y9RmTdF6m7WXUkIaKzJ85GlBZZo/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        400,
+        -80
+      ],
+      "id": "e9ffbb21-ac4c-41eb-a00e-3e8714e7010a",
+      "name": "Obtener Inventario",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "m825oOaoDRIBkie9",
+          "name": "Google Sheets - diviercasas26@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        176,
+        -80
+      ],
+      "id": "10d3a04a-29aa-4181-9777-91f9d83d7e53",
+      "name": "Agrupar Solicitudes"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        624,
+        -80
+      ],
+      "id": "9eca88eb-ab2a-4558-b497-55feb2548f14",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().filter((item) => !!item.json['Dirección de correo electrónico'] && !item.json['Fecha de Verificacion']);"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -48,
+        -80
+      ],
+      "id": "b5e85dc8-29ea-44c1-9af8-7090774746f7",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst inventory = items.map((item) => item.json.data).flat();\nconst newOrders = $('Agrupar Solicitudes').first().json.data;\n\nconsole.log(newOrders);\n\nfor (let newOrder of newOrders) {\n  const sizeProduct = inventory.find(item => item.Talla === newOrder['Talla de camiseta']);\n\n  // No se encuentra el producto por talla\n  if ( !sizeProduct ) continue;\n  \n  if ( !sizeProduct.Inventario ) continue;\n\n  // No hay existencias\n  if ( sizeProduct.Inventario <= 0) continue;\n\n  // Esto muta el item en el arreglo\n\n  sizeProduct.Inventario--;\n  newOrder.isSuccess = true;\n  \n}\n\nreturn {\n  inventory,\n  orders: newOrders,\n}\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        848,
+        -80
+      ],
+      "id": "1a38ee76-b5d4-4f0c-903e-f475739675ef",
+      "name": "Reducir Inventario"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "orders",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1152,
+        -288
+      ],
+      "id": "7d06b3bd-4c66-49f4-a8cc-a81b7f798061",
+      "name": "Extraer Detalle de Ordenes"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1MTnjS99Iry6H8YgQhoXICBxW30weeqfCf0UHTlhfZLY",
+          "mode": "list",
+          "cachedResultName": "T-Shirt (respuestas)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MTnjS99Iry6H8YgQhoXICBxW30weeqfCf0UHTlhfZLY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 580784192,
+          "mode": "list",
+          "cachedResultName": "Respuestas de formulario 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MTnjS99Iry6H8YgQhoXICBxW30weeqfCf0UHTlhfZLY/edit#gid=580784192"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Verificado": "={{ !!$json.isSuccess }}",
+            "Fecha de Verificacion": "={{ $now }}",
+            "Dirección de correo electrónico": "={{ $json['Dirección de correo electrónico'] }}"
+          },
+          "matchingColumns": [
+            "Dirección de correo electrónico"
+          ],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Talla de camiseta",
+              "displayName": "Talla de camiseta",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Comentarios Adicionales",
+              "displayName": "Comentarios Adicionales",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Dirección de correo electrónico",
+              "displayName": "Dirección de correo electrónico",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Verificado",
+              "displayName": "Verificado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fecha de Verificacion",
+              "displayName": "Fecha de Verificacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1376,
+        -288
+      ],
+      "id": "966c76da-c7d7-438e-a501-12fce636890a",
+      "name": "Marcar Verificado la Order",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "m825oOaoDRIBkie9",
+          "name": "Google Sheets - diviercasas26@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1s_z9OKCv3O6oVLH4Y9RmTdF6m7WXUkIaKzJ85GlBZZo",
+          "mode": "list",
+          "cachedResultName": "T-Shirt Inventario",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1s_z9OKCv3O6oVLH4Y9RmTdF6m7WXUkIaKzJ85GlBZZo/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "inventario",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1s_z9OKCv3O6oVLH4Y9RmTdF6m7WXUkIaKzJ85GlBZZo/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Inventario": "={{ $json.Inventario }}",
+            "row_number": "={{ $json.row_number }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Producto",
+              "displayName": "Producto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Talla",
+              "displayName": "Talla",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Inventario",
+              "displayName": "Inventario",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1392,
+        176
+      ],
+      "id": "d7bf0e27-52b2-43b1-ada5-22afea68fdab",
+      "name": "Actualizar Inventario",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "m825oOaoDRIBkie9",
+          "name": "Google Sheets - diviercasas26@gmail.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Google Sheet\nActualizar respuestas",
+        "height": 288,
+        "width": 544
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1056,
+        -400
+      ],
+      "typeVersion": 1,
+      "id": "eb0a5a2b-cb2e-4bc4-af01-1a21a99c9c51",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "inventory",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1168,
+        176
+      ],
+      "id": "d6ada1d0-d05b-434d-a2d0-aaee681a854e",
+      "name": "Extraer Detalle de Inventario"
+    },
+    {
+      "parameters": {
+        "content": "## Google Sheet\nActualizar Inventario",
+        "height": 256,
+        "width": 544
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1056,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "075af607-c3ec-4674-84ee-5ef6dd2981a6",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch"
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1872,
+        -64
+      ],
+      "id": "a34ee1e9-aa4f-4516-9271-d4c7185afe39",
+      "name": "Unir Procesos"
+    },
+    {
+      "parameters": {
+        "sendTo": "diviercasas26@gmail.com",
+        "subject": "Actualizacion de Camisetas T-Shirt",
+        "message": "=<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Actualización completada</title>\n</head>\n<body style=\"font-family: Arial, sans-serif; background-color: #f9f9f9; margin:0; padding:0;\">\n  <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#f9f9f9; padding:20px;\">\n    <tr>\n      <td align=\"center\">\n        <table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color:#ffffff; border:1px solid #ddd; padding:20px;\">\n          <tr>\n            <td align=\"center\" style=\"padding-bottom:20px;\">\n              <h2 style=\"color:#333;\">Notificación de actualización</h2>\n            </td>\n          </tr>\n          <tr>\n            <td style=\"color:#555; font-size:16px; line-height:1.5;\">\n              <p>Estimado/a usuario, Divier</p>\n              <p>Nos complace informarle que el proceso de <strong>actualización de camisetas</strong> ha finalizado exitosamente.</p>\n              <p>Fecha: <strong>{{ $now.format('yyyy-MM-dd')}}</strong></p>\n              <p>Ya puede acceder a los nuevos modelos y disfrutar de las mejoras realizadas.</p>\n              <p>Gracias por su paciencia y confianza.</p>\n            </td>\n          </tr>\n          <tr>\n            <td align=\"center\" style=\"padding-top:20px;\">\n              <a href=\"#\" style=\"background-color:#0078D7; color:#ffffff; text-decoration:none; padding:10px 20px; border-radius:4px; font-size:16px;\">Ver camisetas</a>\n            </td>\n          </tr>\n          <tr>\n            <td style=\"padding-top:30px; font-size:12px; color:#999;\" align=\"center\">\n              © 2026 Tu Empresa. Todos los derechos reservados.\n            </td>\n          </tr>\n        </table>\n      </td>\n    </tr>\n  </table>\n\n<h1>Cambios</h1>\n{{$('Reducir Inventario').item.json.inventory.map(item => item.Talla).join(', ')}}\n\n<h1>Personas</h1>\n{{$('Reducir Inventario').item.json.orders.map(item => item.Nombre).join(', ')}}\n\n</body>\n</html>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2416,
+        -64
+      ],
+      "id": "0a1dd52f-e0f0-4394-875c-f4751e530850",
+      "name": "Send a message",
+      "webhookId": "2d3e2f99-4d5a-4515-afeb-0a1465b94159",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "5PpSOh6ABJDqQ0v4",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1MTnjS99Iry6H8YgQhoXICBxW30weeqfCf0UHTlhfZLY",
+          "mode": "list",
+          "cachedResultName": "T-Shirt (respuestas)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MTnjS99Iry6H8YgQhoXICBxW30weeqfCf0UHTlhfZLY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 580784192,
+          "mode": "list",
+          "cachedResultName": "Respuestas de formulario 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MTnjS99Iry6H8YgQhoXICBxW30weeqfCf0UHTlhfZLY/edit#gid=580784192"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -672,
+        64
+      ],
+      "id": "040e3de9-3c93-47d4-9040-da3d972838db",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "hSv3QUggqpN2l6eC",
+          "name": "Google Sheets Trigger account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2160,
+        -64
+      ],
+      "id": "c046dc0d-2252-44a2-863b-284d91ff7663",
+      "name": "Aggregate1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Obtener Solicitudes de Camisetas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Solicitudes de Camisetas": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Inventario": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar registros sin correo electronico": {
+      "main": [
+        []
+      ]
+    },
+    "Agrupar Solicitudes": {
+      "main": [
+        [
+          {
+            "node": "Obtener Inventario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Agrupar Solicitudes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Reducir Inventario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reducir Inventario": {
+      "main": [
+        [
+          {
+            "node": "Extraer Detalle de Ordenes",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Extraer Detalle de Inventario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer Detalle de Ordenes": {
+      "main": [
+        [
+          {
+            "node": "Marcar Verificado la Order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar Verificado la Order": {
+      "main": [
+        [
+          {
+            "node": "Unir Procesos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer Detalle de Inventario": {
+      "main": [
+        [
+          {
+            "node": "Actualizar Inventario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar Inventario": {
+      "main": [
+        [
+          {
+            "node": "Unir Procesos",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Unir Procesos": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets Trigger": {
+      "main": [
+        []
+      ]
+    },
+    "Send a message": {
+      "main": [
+        []
+      ]
+    },
+    "Aggregate1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "704e9d2d-7eb8-4d3e-ab76-bb29c9471046",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "88dd7a0f4810eac54b96b4465bbcec8adbc38bf739d63b0195b306d5f0462838"
+  },
+  "id": "nbGCv5gGjl7Lkikh",
+  "tags": []
+}
