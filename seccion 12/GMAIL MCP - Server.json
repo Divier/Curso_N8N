@@ -1,0 +1,137 @@
+{
+  "name": "GMAIL MCP - Server",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "1029d6ac-aeb6-4d20-89bc-47225f9d35cf"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 2,
+      "position": [
+        -32,
+        -240
+      ],
+      "id": "fa21c8fa-efd4-4634-b3b3-79b1774e2a7b",
+      "name": "MCP Server Trigger",
+      "webhookId": "1029d6ac-aeb6-4d20-89bc-47225f9d35cf"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        48,
+        -16
+      ],
+      "id": "6f0b640c-b090-4646-a2b6-70b4323aa415",
+      "name": "Enviar Correo",
+      "webhookId": "6550b36c-5550-4747-8157-8a43d6a806e1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "4bRrQh5pI7L4CJ2K",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "html",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        176,
+        -16
+      ],
+      "id": "0999afe4-17cb-4a1e-91bc-0b9d8076e9b5",
+      "name": "Crear Borrador",
+      "webhookId": "6550b36c-5550-4747-8157-8a43d6a806e1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "4bRrQh5pI7L4CJ2K",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}",
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        -80,
+        -16
+      ],
+      "id": "1e913bf3-d33b-427d-a320-9af949935510",
+      "name": "Obtener Correos",
+      "webhookId": "6550b36c-5550-4747-8157-8a43d6a806e1",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "4bRrQh5pI7L4CJ2K",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Obtener Correos": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Correo": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Borrador": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "7f0772b5-b1f7-437e-bf55-1a865a686ef6",
+  "meta": {
+    "instanceId": "88eb99ba94a2abc0fab90deaa8b0874e2a4ee9090a431eb076fd8c61d8a1acd8"
+  },
+  "id": "PjbBDsepW687nacB",
+  "tags": []
+}

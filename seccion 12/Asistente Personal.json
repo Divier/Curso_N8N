@@ -8,10 +8,10 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.4,
       "position": [
-        -208,
-        -96
+        -784,
+        112
       ],
-      "id": "5481f6db-9f4d-4370-a5dd-45855bf0e204",
+      "id": "22d7a6f4-a714-4dae-8a07-471018895958",
       "name": "When chat message received",
       "webhookId": "782bec1a-7023-470d-8f72-ea7067a72847"
     },
@@ -24,28 +24,29 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        0,
-        -96
+        -320,
+        112
       ],
-      "id": "3c1a6f9b-f3a3-4936-9b47-b2650940bd47",
+      "id": "028c2922-5c51-41d2-96c1-f2ff64b9031d",
       "name": "AI Agent"
     },
     {
       "parameters": {
+        "modelName": "models/gemini-3-flash-preview",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        -208,
-        128
+        -1024,
+        352
       ],
-      "id": "ed5096af-5d65-4001-978c-3abc4127d86a",
+      "id": "a293d57d-dbd7-4fb7-9c56-c3df2adcafb9",
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
-          "id": "23mSDWyqfN6mF7Y3",
-          "name": "Google Gemini Api account-diviercasas26@gmail.com"
+          "id": "uGgbfINup4kaJByO",
+          "name": "Google Gemini(PaLM) Api account"
         }
       }
     },
@@ -56,10 +57,10 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        16,
-        112
+        -528,
+        352
       ],
-      "id": "4a3d79cb-2c30-4ee9-9b02-329e9f0abdce",
+      "id": "a2f1176a-c39e-45e7-bfe9-694141a5b4ee",
       "name": "Simple Memory"
     },
     {
@@ -74,15 +75,15 @@
       "type": "n8n-nodes-base.gmailTool",
       "typeVersion": 2.2,
       "position": [
-        576,
-        -16
+        368,
+        -80
       ],
-      "id": "24549c58-469e-46f4-a35a-91ee509422d0",
+      "id": "e6819ee3-2edb-4cdd-aca6-ebbbda84bafe",
       "name": "Enviar Correo",
       "webhookId": "6550b36c-5550-4747-8157-8a43d6a806e1",
       "credentials": {
         "gmailOAuth2": {
-          "id": "5PpSOh6ABJDqQ0v4",
+          "id": "4bRrQh5pI7L4CJ2K",
           "name": "Gmail account"
         }
       }
@@ -98,15 +99,15 @@
       "type": "n8n-nodes-base.gmailTool",
       "typeVersion": 2.2,
       "position": [
-        576,
-        176
+        368,
+        112
       ],
-      "id": "3d5292bd-b377-4437-b4e6-c6b263fa7745",
+      "id": "9fa67d6c-2864-447e-b7f0-245b20502411",
       "name": "Crear Borrador",
       "webhookId": "6550b36c-5550-4747-8157-8a43d6a806e1",
       "credentials": {
         "gmailOAuth2": {
-          "id": "5PpSOh6ABJDqQ0v4",
+          "id": "4bRrQh5pI7L4CJ2K",
           "name": "Gmail account"
         }
       }
@@ -120,15 +121,15 @@
       "type": "n8n-nodes-base.gmailTool",
       "typeVersion": 2.2,
       "position": [
-        576,
-        -208
+        368,
+        -272
       ],
-      "id": "158644bb-049b-4dc6-9f84-0d97769e8a44",
+      "id": "aea356a1-bbda-4c63-8678-55a012f415a0",
       "name": "Obtener Correos",
       "webhookId": "6550b36c-5550-4747-8157-8a43d6a806e1",
       "credentials": {
         "gmailOAuth2": {
-          "id": "5PpSOh6ABJDqQ0v4",
+          "id": "4bRrQh5pI7L4CJ2K",
           "name": "Gmail account"
         }
       }
@@ -153,14 +154,14 @@
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.3,
       "position": [
-        160,
-        320
+        -352,
+        544
       ],
-      "id": "21a23d2b-08e1-4fc9-b705-b6e303c0da4f",
+      "id": "8ec74857-d599-4cff-ac18-de86042676f4",
       "name": "Crear Eventos de calendario",
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "3jfKQSStm7GUmzaT",
+          "id": "vmbm1xwHRn9ql3W0",
           "name": "Google Calendar account"
         }
       }
@@ -181,17 +182,93 @@
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.3,
       "position": [
-        336,
-        256
+        -192,
+        544
       ],
-      "id": "888d7103-0e6a-4c0d-b3f0-708b68c003af",
+      "id": "85a11985-08de-4242-b926-295fe156cb4c",
       "name": "Obtener eventos de calendario",
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "3jfKQSStm7GUmzaT",
+          "id": "vmbm1xwHRn9ql3W0",
           "name": "Google Calendar account"
         }
       }
+    },
+    {
+      "parameters": {
+        "description": "Esta herramienta ofrece informacion sobre pokemosn",
+        "workflowId": {
+          "__rl": true,
+          "value": "pE0GlVJ7D2rR3yHm",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/pE0GlVJ7D2rR3yHm",
+          "cachedResultName": "Pokemon Finder Tool"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        352
+      ],
+      "id": "a9bbb2f8-8e9b-4cee-92ad-b759cbf2c9af",
+      "name": "Obtener_Info_Pokemon"
+    },
+    {
+      "parameters": {
+        "endpointUrl": "http://localhost:5678/mcp/1029d6ac-aeb6-4d20-89bc-47225f9d35cf",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        176,
+        352
+      ],
+      "id": "019eb840-89d0-4c2f-a627-c331d221c04a",
+      "name": "MCP Gmail Client"
+    },
+    {
+      "parameters": {
+        "model": "gpt-oss:20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -768,
+        352
+      ],
+      "id": "cebb2ff0-13b5-45c3-882d-61ce596b4e3b",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "YF4Ams2tYqbPmOoU",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "endpointUrl": "http://localhost:5678/mcp/c6df798e-e032-4d6a-b7d0-fbaac281598c",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        -272,
+        352
+      ],
+      "id": "240059bb-ec55-4810-832d-f3918f14068c",
+      "name": "MCP Google Calendar Client"
     }
   ],
   "pinData": {},
@@ -209,13 +286,7 @@
     },
     "Google Gemini Chat Model": {
       "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Simple Memory": {
@@ -231,38 +302,30 @@
     },
     "Enviar Correo": {
       "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Crear Borrador": {
       "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Obtener Correos": {
       "ai_tool": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_tool",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Crear Eventos de calendario": {
+      "ai_tool": [
+        []
+      ]
+    },
+    "Obtener eventos de calendario": {
+      "ai_tool": [
+        []
+      ]
+    },
+    "Obtener_Info_Pokemon": {
       "ai_tool": [
         [
           {
@@ -273,7 +336,34 @@
         ]
       ]
     },
-    "Obtener eventos de calendario": {
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "MCP Gmail Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Google Calendar Client": {
       "ai_tool": [
         [
           {
@@ -288,14 +378,13 @@
   "active": false,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate",
-    "availableInMCP": false
+    "binaryMode": "separate"
   },
-  "versionId": "d05eaf1a-323f-4839-8459-4f831b0522ba",
+  "versionId": "17ea9029-dcb0-4a47-98c8-21b3cf8673d5",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "88dd7a0f4810eac54b96b4465bbcec8adbc38bf739d63b0195b306d5f0462838"
+    "instanceId": "88eb99ba94a2abc0fab90deaa8b0874e2a4ee9090a431eb076fd8c61d8a1acd8"
   },
-  "id": "WuDZ19uX6oLdQJMX",
+  "id": "BTqEDzHfSo570XwQ",
   "tags": []
 }

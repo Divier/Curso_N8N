@@ -1,0 +1,115 @@
+{
+  "name": "GCalendar MCP - Server",
+  "nodes": [
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "diviercasas26@gmail.com",
+          "mode": "list",
+          "cachedResultName": "diviercasas26@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "useDefaultReminders": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Use_Default_Reminders', ``, 'boolean') }}",
+        "additionalFields": {
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "location": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Location', ``, 'string') }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        -512,
+        80
+      ],
+      "id": "0d21ab0e-b9de-45be-8a38-cb6f3012a13f",
+      "name": "Crear Eventos de calendario",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "vmbm1xwHRn9ql3W0",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "mode": "list",
+          "value": "diviercasas26@gmail.com"
+        },
+        "limit": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Limit', ``, 'number') }}",
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        -384,
+        80
+      ],
+      "id": "e7c2e7e7-24b9-4b0c-a3ed-fc92f72081d8",
+      "name": "Obtener eventos de calendario",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "vmbm1xwHRn9ql3W0",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "c6df798e-e032-4d6a-b7d0-fbaac281598c"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 2,
+      "position": [
+        -512,
+        -144
+      ],
+      "id": "86121df8-b56f-4f15-ac6a-1543da0a03ad",
+      "name": "MCP Server Trigger",
+      "webhookId": "c6df798e-e032-4d6a-b7d0-fbaac281598c"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Crear Eventos de calendario": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener eventos de calendario": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "56bcb6d6-744a-402a-b4aa-58981f709aea",
+  "meta": {
+    "instanceId": "88eb99ba94a2abc0fab90deaa8b0874e2a4ee9090a431eb076fd8c61d8a1acd8"
+  },
+  "id": "5ulXtnVENQpvJziy",
+  "tags": []
+}
