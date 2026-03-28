@@ -21,14 +21,14 @@
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.3,
       "position": [
-        -512,
-        80
+        -48,
+        192
       ],
-      "id": "0d21ab0e-b9de-45be-8a38-cb6f3012a13f",
+      "id": "d96a81a7-b309-4160-b5b0-ba45726ab6c8",
       "name": "Crear Eventos de calendario",
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "vmbm1xwHRn9ql3W0",
+          "id": "3jfKQSStm7GUmzaT",
           "name": "Google Calendar account"
         }
       }
@@ -49,14 +49,14 @@
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.3,
       "position": [
-        -384,
-        80
+        96,
+        192
       ],
-      "id": "e7c2e7e7-24b9-4b0c-a3ed-fc92f72081d8",
+      "id": "424990e0-f4d7-4925-9f90-534e706f0f85",
       "name": "Obtener eventos de calendario",
       "credentials": {
         "googleCalendarOAuth2Api": {
-          "id": "vmbm1xwHRn9ql3W0",
+          "id": "3jfKQSStm7GUmzaT",
           "name": "Google Calendar account"
         }
       }
@@ -68,10 +68,10 @@
       "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
       "typeVersion": 2,
       "position": [
-        -512,
-        -144
+        0,
+        0
       ],
-      "id": "86121df8-b56f-4f15-ac6a-1543da0a03ad",
+      "id": "2b77a281-56a8-49c9-99df-dc92d0b0fa5f",
       "name": "MCP Server Trigger",
       "webhookId": "c6df798e-e032-4d6a-b7d0-fbaac281598c"
     }
@@ -104,12 +104,14 @@
   "active": true,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate"
+    "binaryMode": "separate",
+    "availableInMCP": false
   },
-  "versionId": "56bcb6d6-744a-402a-b4aa-58981f709aea",
+  "versionId": "e7f21f0b-ce89-4d2e-83e3-ef07436258b8",
   "meta": {
-    "instanceId": "88eb99ba94a2abc0fab90deaa8b0874e2a4ee9090a431eb076fd8c61d8a1acd8"
+    "templateCredsSetupCompleted": true,
+    "instanceId": "88dd7a0f4810eac54b96b4465bbcec8adbc38bf739d63b0195b306d5f0462838"
   },
-  "id": "5ulXtnVENQpvJziy",
+  "id": "TDZYZyFgmwS9l4Wp",
   "tags": []
 }

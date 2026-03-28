@@ -8,10 +8,10 @@
       "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
       "typeVersion": 2,
       "position": [
-        -32,
-        -240
+        0,
+        0
       ],
-      "id": "fa21c8fa-efd4-4634-b3b3-79b1774e2a7b",
+      "id": "7565f727-5aec-4cc0-b001-3c3c3b38db7d",
       "name": "MCP Server Trigger",
       "webhookId": "1029d6ac-aeb6-4d20-89bc-47225f9d35cf"
     },
@@ -27,15 +27,15 @@
       "type": "n8n-nodes-base.gmailTool",
       "typeVersion": 2.2,
       "position": [
-        48,
-        -16
+        80,
+        224
       ],
-      "id": "6f0b640c-b090-4646-a2b6-70b4323aa415",
+      "id": "c08c951b-7b47-42d1-856e-d039086afdb0",
       "name": "Enviar Correo",
       "webhookId": "6550b36c-5550-4747-8157-8a43d6a806e1",
       "credentials": {
         "gmailOAuth2": {
-          "id": "4bRrQh5pI7L4CJ2K",
+          "id": "5PpSOh6ABJDqQ0v4",
           "name": "Gmail account"
         }
       }
@@ -51,15 +51,15 @@
       "type": "n8n-nodes-base.gmailTool",
       "typeVersion": 2.2,
       "position": [
-        176,
-        -16
+        208,
+        224
       ],
-      "id": "0999afe4-17cb-4a1e-91bc-0b9d8076e9b5",
+      "id": "dd4d7ce5-5be4-4b4d-81ce-c678d639fe7d",
       "name": "Crear Borrador",
       "webhookId": "6550b36c-5550-4747-8157-8a43d6a806e1",
       "credentials": {
         "gmailOAuth2": {
-          "id": "4bRrQh5pI7L4CJ2K",
+          "id": "5PpSOh6ABJDqQ0v4",
           "name": "Gmail account"
         }
       }
@@ -73,15 +73,15 @@
       "type": "n8n-nodes-base.gmailTool",
       "typeVersion": 2.2,
       "position": [
-        -80,
-        -16
+        -48,
+        224
       ],
-      "id": "1e913bf3-d33b-427d-a320-9af949935510",
+      "id": "fb8b29e6-9323-4cca-a8ad-8869e8c37987",
       "name": "Obtener Correos",
       "webhookId": "6550b36c-5550-4747-8157-8a43d6a806e1",
       "credentials": {
         "gmailOAuth2": {
-          "id": "4bRrQh5pI7L4CJ2K",
+          "id": "5PpSOh6ABJDqQ0v4",
           "name": "Gmail account"
         }
       }
@@ -126,12 +126,14 @@
   "active": true,
   "settings": {
     "executionOrder": "v1",
-    "binaryMode": "separate"
+    "binaryMode": "separate",
+    "availableInMCP": false
   },
-  "versionId": "7f0772b5-b1f7-437e-bf55-1a865a686ef6",
+  "versionId": "3b02f3f5-c617-4a14-81e7-dae5a7574bd8",
   "meta": {
-    "instanceId": "88eb99ba94a2abc0fab90deaa8b0874e2a4ee9090a431eb076fd8c61d8a1acd8"
+    "templateCredsSetupCompleted": true,
+    "instanceId": "88dd7a0f4810eac54b96b4465bbcec8adbc38bf739d63b0195b306d5f0462838"
   },
-  "id": "PjbBDsepW687nacB",
+  "id": "IptFNIOVBYE7uBvy",
   "tags": []
 }

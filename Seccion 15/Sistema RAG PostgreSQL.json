@@ -1,0 +1,1048 @@
+{
+  "name": "Sistema RAG Estandar",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## ALIMENTAR LA BD",
+        "height": 672,
+        "width": 768
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -912,
+        -304
+      ],
+      "typeVersion": 1,
+      "id": "7a2187ef-021d-4020-96e3-6fdb4c60f306",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## CONSUMIR LA BD",
+        "height": 704,
+        "width": 816,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        320,
+        -304
+      ],
+      "typeVersion": 1,
+      "id": "081cde3e-e90d-44ff-8f85-dcbfd13721f3",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "formTitle": "Cargar Documentos",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Documentos",
+              "fieldType": "file",
+              "acceptFileTypes": ".pdf"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -2224,
+        -576
+      ],
+      "id": "e089f9a6-3716-463f-bd2f-363a86a30162",
+      "name": "On form submission",
+      "webhookId": "d854a301-163e-4065-a1af-451983f53128"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "memoryKey": {
+          "__rl": true,
+          "value": "vector_store_key",
+          "mode": "list",
+          "cachedResultName": "vector_store_key"
+        },
+        "embeddingBatchSize": 250
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        -496,
+        -528
+      ],
+      "id": "0be76117-a61b-441d-a304-90f74314aa03",
+      "name": "Simple Vector Store",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "textSplittingMode": "custom",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        -512,
+        -48
+      ],
+      "id": "70352408-8a64-4f05-9f9e-1d8b7ac34ad2",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "chunkOverlap": 250,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        -272,
+        128
+      ],
+      "id": "9da578a9-3071-400b-8907-c6467508f224",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "# Rol: Asistente Legal\n\n## Descripción\nEres un asistente legal diseñado para ayudar a un abogado a consultar información contenida en documentos legales internos.  \nDebes recuperar, analizar y entregar respuestas precisas, claras y fundamentadas basadas únicamente en los documentos disponibles.  \nMantén siempre un tono profesional y formal, y prioriza la exactitud legal en todas tus respuestas.  \n\nTus respuestas deben de ser cortas y puntuales.\n\nSi no conoces la respuesta, responde que no dispones de la información.\n\n\n\n## Capacidades\n- Búsqueda y recuperación de información legal relevante.  \n- Respuestas concisas y con fundamento en los documentos disponibles.  \n- Inclusión de referencia del documento utilizado para responder.  \n- Identificación de ausencia de información en los documentos.  \n- Mantener confidencialidad y precisión en todas las respuestas.  \n\n\n## Comportamiento\n1. Recepción de la consulta: Recibe la pregunta o solicitud del abogado.  \n2. Búsqueda de información en la base de conocimiento para encontrar información relevante en los documentos.  \n3. Generación de la respuesta:  \n   - Si encuentras la información:  \n     - Proporciona un resumen conciso, claro y preciso.  \n     - Incluye la referencia del documento donde encontraste la información (nombre o identificación del documento y sección/cláusula si aplica).  \n   - Si no encuentras la información:  \n     - Responde únicamente con:  \n       ```\n       No puedo encontrar la respuesta en los recursos disponibles.\n       ```\n4. Confidencialidad: No reveles información fuera de lo que esté contenido en los documentos.  \n5. Tono: Profesional, formal, claro y directo.  \n\n## Ejemplo\nPregunta del abogado:  \n> ¿Cuál es el procedimiento de terminación anticipada del contrato de arrendamiento?\n\nRespuesta del asistente (ejemplo):  \n> Según el Contrato de Arrendamiento - Cláusula 12, el contrato puede ser terminado anticipadamente por cualquiera de las partes notificando con al menos 30 días de antelación y cumpliendo con el pago proporcional de las obligaciones pendientes.  \n> Referencia: Contrato_Arrendamiento_2025.pdf, Cláusula 12.  "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        672,
+        -208
+      ],
+      "id": "57f4f2ba-7669-4a8e-9b7e-c7346340a363",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        384,
+        -208
+      ],
+      "id": "1a6bcb03-e848-41ae-a54a-74f91061b47a",
+      "name": "When chat message received",
+      "webhookId": "f2cb6d29-e1aa-4f56-9af2-56b33aba1433"
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        736,
+        16
+      ],
+      "id": "e40061bc-f670-43df-9db2-20dbc3489e8f",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Aqui puedes tomar los documentos  cargados como base de informacion.",
+        "memoryKey": {
+          "__rl": true,
+          "value": "vector_store_key",
+          "mode": "list",
+          "cachedResultName": "vector_store_key"
+        },
+        "includeDocumentMetadata": false
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        880,
+        -512
+      ],
+      "id": "a1013b0c-6edf-4168-9854-36fb3f94e1ee",
+      "name": "Simple Vector Store1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "gpt-oss:20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        368,
+        240
+      ],
+      "id": "df384f0a-044c-4391-98d0-8ae2f58f856a",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "L1DLTBatYz4eF2lG",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "embeddinggemma:latest"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        112,
+        608
+      ],
+      "id": "dd2fa035-66c7-47f6-9bc0-25b2e8882937",
+      "name": "Embeddings Ollama",
+      "credentials": {
+        "ollamaApi": {
+          "id": "L1DLTBatYz4eF2lG",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Seleccion de Documentos",
+        "height": 752,
+        "width": 1984,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2960,
+        -368
+      ],
+      "typeVersion": 1,
+      "id": "d80080da-aae8-41cd-9ebe-cb58347a668f",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "embeddingBatchSize": 500,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        -800,
+        -224
+      ],
+      "id": "dedbbddb-cece-4f47-83b0-2245061489ec",
+      "name": "PGVector NeonTech diviercasas26",
+      "credentials": {
+        "postgres": {
+          "id": "jk14u82FpdjuTLg5",
+          "name": "CursoN8N-BD-NEON-TECH"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Aqui puedes tomar los documentos  cargados como base de informacion.",
+        "topK": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Limit', ``, 'number') }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        48
+      ],
+      "id": "5577757a-8a21-4e50-a5c2-02ef1f709436",
+      "name": "Answer questions with a vector store1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [
+        800,
+        256
+      ],
+      "id": "146f355b-97e6-4eed-9d37-4b2c0b899368",
+      "name": "Postgres PGVector Store",
+      "credentials": {
+        "postgres": {
+          "id": "jk14u82FpdjuTLg5",
+          "name": "CursoN8N-BD-NEON-TECH"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {}
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1JuxwRfMmXYLGjxpIMcAAxpHWmIO-dbgR",
+          "mode": "list",
+          "cachedResultName": "Documentos Legales",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1JuxwRfMmXYLGjxpIMcAAxpHWmIO-dbgR"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1840,
+        -576
+      ],
+      "id": "7c1d4899-8bc5-4af3-95d6-585e358159a9",
+      "name": "Google Drive Trigger diviercasas26",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "COfCSZQo54NpFEj2",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.file_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -1120,
+        -224
+      ],
+      "id": "c432ae35-c3a0-4de7-be9b-8c388680c92d",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "COfCSZQo54NpFEj2",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2848,
+        -208
+      ],
+      "id": "1be91cb2-d25f-49b6-ae65-2526f56998f8",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -2848,
+        192
+      ],
+      "id": "025682f4-20c7-4d91-820a-c3de780ccec0",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1JuxwRfMmXYLGjxpIMcAAxpHWmIO-dbgR",
+            "mode": "list",
+            "cachedResultName": "Documentos Legales",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1JuxwRfMmXYLGjxpIMcAAxpHWmIO-dbgR"
+          }
+        },
+        "options": {
+          "fields": [
+            "*"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -2656,
+        -16
+      ],
+      "id": "240e108a-5d88-4c6e-b9d8-49cf19f77dd9",
+      "name": "Buscar Archivos/Directorios",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "COfCSZQo54NpFEj2",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "85245ebf-e35c-4a3e-bb81-d4d394649e54",
+              "leftValue": "={{ $json.mimeType }}",
+              "rightValue": "application/vnd.google-apps.folder",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -2400,
+        -16
+      ],
+      "id": "4a3b20e3-2e1e-43f9-824a-ea15f94bb24c",
+      "name": "¿Es un archivo?"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "returnAll": true,
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "={{ $json.id }}",
+            "mode": "id"
+          }
+        },
+        "options": {
+          "fields": [
+            "*"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -2160,
+        160
+      ],
+      "id": "1be0cd85-d2ae-4209-97a5-dbaf5054ce33",
+      "name": "Search files and folders",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "COfCSZQo54NpFEj2",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select count(*) as ingested from public.ingested_files\nwhere file_id = '{{ $json.id }}' and md5_checksum ='{{ $json.md5Checksum }}'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -2240,
+        -208
+      ],
+      "id": "d429e0b6-c6d9-467b-b908-25ddb38386f3",
+      "name": "Obtener Carga Previa",
+      "credentials": {
+        "postgres": {
+          "id": "jk14u82FpdjuTLg5",
+          "name": "CursoN8N-BD-NEON-TECH"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "209a81e5-aba0-4d5a-9b8c-b27ed97b9649",
+              "leftValue": "={{ $json.ingested }}",
+              "rightValue": "0",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -2048,
+        -208
+      ],
+      "id": "54261f30-6663-4b4a-93bc-73fc8875eb9c",
+      "name": "¿Fue Previamente Cargado?"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -1856,
+        -352
+      ],
+      "id": "c7cd26c5-d621-4d12-b517-76eb8ff3eed9",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1b91e01-4a25-42e6-aa0e-dcb1caa729a1",
+              "name": "id",
+              "value": "={{ $('¿Es un archivo?').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "8deeac79-a319-4d62-9638-9b627412efc0",
+              "name": "md5Checksum",
+              "value": "={{ $('¿Es un archivo?').item.json.md5Checksum }}",
+              "type": "string"
+            },
+            {
+              "id": "6b240e88-b2ec-4d2e-a24b-c61ccc75a0cc",
+              "name": "mimeType",
+              "value": "={{ $('¿Es un archivo?').item.json.mimeType }}",
+              "type": "string"
+            },
+            {
+              "id": "c7eace91-2ef7-4c51-9f77-6d9f77c6f000",
+              "name": "modifiedTime",
+              "value": "={{ $('¿Es un archivo?').item.json.modifiedTime }}",
+              "type": "string"
+            },
+            {
+              "id": "eba33469-1965-4572-b915-2f1ea0e2b2af",
+              "name": "name",
+              "value": "={{ $('¿Es un archivo?').item.json.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1856,
+        -192
+      ],
+      "id": "67958a3b-46b3-42f5-8b7e-a2694c013dfe",
+      "name": "Extraer variables"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "delete from n8n_vectors where file_id= '{{ $json.id }}'",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -1680,
+        -32
+      ],
+      "id": "aa47477f-58f8-4dcf-8ed9-98adb30ff5ee",
+      "name": "Borrar Referencias",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "jk14u82FpdjuTLg5",
+          "name": "CursoN8N-BD-NEON-TECH"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch"
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -1520,
+        -176
+      ],
+      "id": "a104568a-1f21-44c0-9657-714c84899d6e",
+      "name": "Esperar Eliminacion"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "ingested_files",
+          "mode": "list",
+          "cachedResultName": "ingested_files"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "file_id": "={{ $json.id }}",
+            "name": "={{ $json.name }}",
+            "mime_type": "={{ $json.mimeType }}",
+            "md5_checksum": "={{ $json.md5Checksum }}",
+            "modified_time": "={{ $json.modifiedTime }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "file_id",
+              "displayName": "file_id",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "mime_type",
+              "displayName": "mime_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "md5_checksum",
+              "displayName": "md5_checksum",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "modified_time",
+              "displayName": "modified_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_ingested",
+              "displayName": "last_ingested",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -1312,
+        -176
+      ],
+      "id": "b7fdaaae-b251-4777-9e8a-f90e5a46153e",
+      "name": "Insertar Documento",
+      "credentials": {
+        "postgres": {
+          "id": "jk14u82FpdjuTLg5",
+          "name": "CursoN8N-BD-NEON-TECH"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE n8n_vectors\nSET file_id = '{{ $('Extraer variables').item.json.id }}'\nWHERE metadata->'loc'->'lines' = '{{ $json.metadata.loc.lines.toJsonString() }}' and file_id is null",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -1104,
+        128
+      ],
+      "id": "a5781bfc-ea7a-4fb5-baa8-f188e06173b0",
+      "name": "Actualizar file_id en la tabla de vectores",
+      "credentials": {
+        "postgres": {
+          "id": "jk14u82FpdjuTLg5",
+          "name": "CursoN8N-BD-NEON-TECH"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -1088,
+        416
+      ],
+      "id": "19f06d1d-eba3-4d00-a28f-e9fa4205abe8",
+      "name": "Termina Proceso"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        []
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "PGVector NeonTech diviercasas26",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Vector Store1": {
+      "ai_tool": [
+        []
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Answer questions with a vector store1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Ollama": {
+      "ai_embedding": [
+        [
+          {
+            "node": "PGVector NeonTech diviercasas26",
+            "type": "ai_embedding",
+            "index": 0
+          },
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Answer questions with a vector store1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres PGVector Store": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Answer questions with a vector store1",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive Trigger diviercasas26": {
+      "main": [
+        []
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "PGVector NeonTech diviercasas26",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Buscar Archivos/Directorios",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Buscar Archivos/Directorios",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Archivos/Directorios": {
+      "main": [
+        [
+          {
+            "node": "¿Es un archivo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Es un archivo?": {
+      "main": [
+        [
+          {
+            "node": "Obtener Carga Previa",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "¿Es un archivo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PGVector NeonTech diviercasas26": {
+      "main": [
+        [
+          {
+            "node": "Actualizar file_id en la tabla de vectores",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Carga Previa": {
+      "main": [
+        [
+          {
+            "node": "¿Fue Previamente Cargado?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Fue Previamente Cargado?": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extraer variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer variables": {
+      "main": [
+        [
+          {
+            "node": "Borrar Referencias",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Esperar Eliminacion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Borrar Referencias": {
+      "main": [
+        [
+          {
+            "node": "Esperar Eliminacion",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Esperar Eliminacion": {
+      "main": [
+        [
+          {
+            "node": "Insertar Documento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insertar Documento": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar file_id en la tabla de vectores": {
+      "main": [
+        [
+          {
+            "node": "Termina Proceso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "06c1ae5b-19cd-4b29-9793-e430b72112d6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "88dd7a0f4810eac54b96b4465bbcec8adbc38bf739d63b0195b306d5f0462838"
+  },
+  "id": "8OWSnuggUN7UkhIp",
+  "tags": []
+}
