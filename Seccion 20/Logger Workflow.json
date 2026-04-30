@@ -1,0 +1,246 @@
+{
+  "name": "Logger Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "workflow_id"
+            },
+            {
+              "name": "workflow_name"
+            },
+            {
+              "name": "level"
+            },
+            {
+              "name": "execution_id"
+            },
+            {
+              "name": "node_name"
+            },
+            {
+              "name": "context_data",
+              "type": "any"
+            },
+            {
+              "name": "message"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -640,
+        -160
+      ],
+      "id": "fd1b4369-701e-412c-b9ec-1dfc9d892c91",
+      "name": "Parent Workflow Data"
+    },
+    {
+      "parameters": {
+        "jsCode": "const input =  $input.first().json;\n\nconst validLevels = {\n  error: 'error',\n  warn: 'warn', \n  info: 'info', \n  success: 'success'\n};\n\nconst level = validLevels[input.level?.toLowerCase()] || 'info';\n\nreturn {\n  level: level,\n    workflow_name:  input.workflow_name  ?? 'unknown',\n    workflow_id:    input.workflow_id    ?? null,\n    execution_id:   input.execution_id  ?? null,\n    execution_mode: input.execution_mode ?? null,\n    node_name:      input.node_name      ?? null,\n    message:        input.message        ?? 'Sin mensaje',\n    context_data:   input.context_data   ? input.context_data : null,\n    error_stack:    input.error_stack    ?? null,\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -432,
+        -160
+      ],
+      "id": "e75658e0-52f1-4efa-b504-b74d904bbcd3",
+      "name": "Validations"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "workflow_logs",
+          "mode": "list",
+          "cachedResultName": "workflow_logs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "level": "={{ $json.level }}",
+            "workflow_name": "={{ $json.workflow_name }}",
+            "workflow_id": "={{ $json.workflow_id }}",
+            "execution_id": "={{ $json.execution_id }}",
+            "execution_mode": "={{ $json.execution_mode }}",
+            "node_name": "={{ $json.node_name }}",
+            "message": "={{ $json.message }}",
+            "context_data": "={{ $json.context_data }}",
+            "error_stack": "={{ $json.error_stack }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "level",
+              "displayName": "level",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "workflow_name",
+              "displayName": "workflow_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "workflow_id",
+              "displayName": "workflow_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "execution_id",
+              "displayName": "execution_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "execution_mode",
+              "displayName": "execution_mode",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "node_name",
+              "displayName": "node_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "context_data",
+              "displayName": "context_data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "object",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "error_stack",
+              "displayName": "error_stack",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -224,
+        -160
+      ],
+      "id": "22a6a258-fc11-4f76-8258-c5a08834397a",
+      "name": "Insert rows in a table",
+      "credentials": {
+        "postgres": {
+          "id": "jk14u82FpdjuTLg5",
+          "name": "CursoN8N-BD-NEON-TECH"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Parent Workflow Data": {
+      "main": [
+        [
+          {
+            "node": "Validations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validations": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "65fc445d-73f6-432d-b33c-2835b9e321c8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "88dd7a0f4810eac54b96b4465bbcec8adbc38bf739d63b0195b306d5f0462838"
+  },
+  "id": "Klo3jHVWqw97swnI",
+  "tags": []
+}

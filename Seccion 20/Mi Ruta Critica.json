@@ -1,0 +1,318 @@
+{
+  "name": "Mi Ruta Critica",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1088,
+        -336
+      ],
+      "id": "cea302c4-edc8-41c6-86e8-ddf7c5e0f869",
+      "name": "Diariamente 8AM"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "92836222-90d1-47bf-8307-60c6248c8409",
+              "name": "simularFallo",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "24a46ee5-21fe-4610-9e4f-c9bcc589d489",
+              "name": "nombreFlujo",
+              "value": "={{ $workflow.name }}",
+              "type": "string"
+            },
+            {
+              "id": "dc214996-417e-43e8-a7a1-ffc052dffdac",
+              "name": "ambiente",
+              "value": "prod",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -880,
+        -336
+      ],
+      "id": "ea68c13b-37b4-4465-bf12-867c444fe1a7",
+      "name": "Configuracion"
+    },
+    {
+      "parameters": {
+        "url": "https://jsonplaceholder.typicode.comxxx/posts",
+        "options": {
+          "timeout": 5000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -672,
+        -336
+      ],
+      "id": "423a448a-310f-412a-b701-2cf9260e4d10",
+      "name": "Obtener Posts",
+      "retryOnFail": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4bf35d0e-fdc5-42b6-a0b0-50bd99bc17a2",
+              "leftValue": "={{ $('Configuracion').item.json.simularFallo }}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -384,
+        -352
+      ],
+      "id": "f3f29e9a-b4f8-40fa-8e63-72f9472af0af",
+      "name": "¿Datos Validos?"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        -496
+      ],
+      "id": "a917e065-5d96-41df-b175-9669af1f1923",
+      "name": "Todo bien!"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        -32
+      ],
+      "id": "0a3e9a14-80a5-4e28-a469-cefc44109ed2",
+      "name": "Stop and Error"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "Klo3jHVWqw97swnI",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/Klo3jHVWqw97swnI",
+          "cachedResultName": "Logger Workflow"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "level": "error",
+            "workflow_name": "={{ $json.nombreFlujo }}",
+            "workflow_id": "={{ $workflow.id }}",
+            "execution_id": "={{ $execution.id }}",
+            "node_name": "={{ $prevNode.name }}",
+            "context_data": "={\n  \"simularFallo\": {{ $json.simularFallo }}\n}",
+            "message": "={{ $json.error.message }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "workflow_id",
+              "displayName": "workflow_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "workflow_name",
+              "displayName": "workflow_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "level",
+              "displayName": "level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "execution_id",
+              "displayName": "execution_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "node_name",
+              "displayName": "node_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "context_data",
+              "displayName": "context_data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": false
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -480,
+        -176
+      ],
+      "id": "2cbce6ca-4563-49cd-9ad4-3b4c6f08d99a",
+      "name": "Grabar Log",
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Diariamente 8AM": {
+      "main": [
+        [
+          {
+            "node": "Configuracion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configuracion": {
+      "main": [
+        [
+          {
+            "node": "Obtener Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Posts": {
+      "main": [
+        [
+          {
+            "node": "¿Datos Validos?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Grabar Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Datos Validos?": {
+      "main": [
+        [
+          {
+            "node": "Todo bien!",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Grabar Log": {
+      "main": [
+        [
+          {
+            "node": "Stop and Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "b6b30d36-3831-480b-9fa4-57c787504c2a",
+  "meta": {
+    "instanceId": "88dd7a0f4810eac54b96b4465bbcec8adbc38bf739d63b0195b306d5f0462838"
+  },
+  "id": "ssEOerHD8bwSeVos",
+  "tags": []
+}
